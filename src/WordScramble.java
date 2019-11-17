@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class wordScramble {
+public class WordScramble {
 
 	private static JFrame menuFrame, gameFrame;
 	private static JLabel logoLabel, difficultyLabel;
@@ -21,7 +21,7 @@ public class wordScramble {
 	private static String[] difficulties;
 	private static String difficulty;
 
-	public wordScramble() {
+	public WordScramble() {
 		initializeMenu();
 		listen();
 	}
@@ -50,6 +50,7 @@ public class wordScramble {
 		difficulties = new String[] { "Easy", "Medium", "Difficult" };
 		difficultySelector = new JComboBox<String>(difficulties);
 		difficultySelector.setSelectedIndex(0);
+		difficulty = "Easy";
 
 		// set up layout and add contents of button panel
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
@@ -78,8 +79,7 @@ public class wordScramble {
 		gameFrame.getContentPane().setBackground(Color.CYAN);
 
 		Player player = new Player();
-		letterGenerator letter = new letterGenerator();
-		letter.chooseWord(difficulty);
+		LetterGenerator letter = new LetterGenerator(difficulty);
 
 		gameFrame.add(player);
 		gameFrame.setBounds(550, 150, 350, 525);
