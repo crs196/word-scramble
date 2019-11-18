@@ -83,4 +83,11 @@ public class LetterGenerator {
 	public String getWord() {
 		return chosenWord;
 	}
+
+	public String getLetter(int index) {
+		if (index >= chosenWord.length())
+			return "";
+		else
+			return chosenWord.charAt(index) + "";
+	}
 }

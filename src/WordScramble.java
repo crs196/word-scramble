@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -16,10 +17,12 @@ public class WordScramble {
 	private static JFrame menuFrame, gameFrame;
 	private static JLabel logoLabel, difficultyLabel;
 	private static JPanel buttonPanel, logoPanel;
+	private static JPanel letterPanel;
 	private static JButton startButton, exitButton;
 	private static JComboBox<String> difficultySelector;
 	private static String[] difficulties;
 	private static String difficulty;
+	private List<JLabel> letters;
 
 	public WordScramble() {
 		initializeMenu();
@@ -78,9 +81,14 @@ public class WordScramble {
 		gameFrame = new JFrame("Word Scramble");
 		gameFrame.getContentPane().setBackground(Color.CYAN);
 
+		letterPanel = new JPanel();
 		Player player = new Player();
 		LetterGenerator letter = new LetterGenerator(difficulty);
 
+		// add letters to letterPanel
+		// I tried a few different methods to do it and couldn't get it to work
+
+		gameFrame.add(letterPanel);
 		gameFrame.add(player);
 		gameFrame.setBounds(550, 150, 350, 525);
 		gameFrame.setResizable(false);
