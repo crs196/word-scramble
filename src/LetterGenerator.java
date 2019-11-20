@@ -12,24 +12,12 @@ public class LetterGenerator {
 	private String chosenWord;
 
 	public LetterGenerator(String diff) {
-		String temp;
 
 		switch (diff) {
 		case "Easy":
 			try {
 				reader = new BufferedReader(new FileReader("dictionary/easy.txt"));
 			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-
-			words = new ArrayList<String>();
-
-			// add words to arrayList
-			try {
-				while ((temp = reader.readLine()) != null) {
-					words.add(temp);
-				}
-			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			break;
@@ -39,17 +27,6 @@ public class LetterGenerator {
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-
-			words = new ArrayList<String>();
-
-			// add words to arrayList
-			try {
-				while ((temp = reader.readLine()) != null) {
-					words.add(temp);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 			break;
 		case "Difficult":
 			try {
@@ -57,18 +34,20 @@ public class LetterGenerator {
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-
-			words = new ArrayList<String>();
-
-			// add words to arrayList
-			try {
-				while ((temp = reader.readLine()) != null) {
-					words.add(temp);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 			break;
+		}
+
+		// add words to arrayList
+
+		words = new ArrayList<String>();
+		String temp;
+
+		try {
+			while ((temp = reader.readLine()) != null) {
+				words.add(temp.toUpperCase());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 		chooseWord();
