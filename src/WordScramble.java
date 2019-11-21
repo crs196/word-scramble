@@ -7,6 +7,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -84,18 +86,19 @@ public class WordScramble {
 	 */
 	private void initializeGame() {
 		gameFrame = new JFrame("Word Scramble");
+		gameFrame.setSize(310,310);
 		gameFrame.getContentPane().setBackground(Color.CYAN);
 		gameFrame.setLayout(new FlowLayout());
 
 		letterPanel = new JPanel();
-		Player player = new Player();
+		letterPanel.setSize(300,300);
 		LetterGenerator letter = new LetterGenerator(difficulty);
 		JLabel[] letters = new JLabel[letter.getWord().length()];
 
 		// add letters to letterPanel
 		letterPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-
+		
 		// for each letter in the goal word
 		for (int i = 0; i < letter.getWord().length(); i++) {
 			letters[i] = new JLabel(letter.getLetter(i)); // make a JLabel with that letter in it
@@ -107,7 +110,6 @@ public class WordScramble {
 		}
 
 		gameFrame.add(letterPanel);
-		gameFrame.add(player);
 		gameFrame.pack();
 		gameFrame.setLocationRelativeTo(null);
 		gameFrame.setResizable(false);
@@ -144,4 +146,5 @@ public class WordScramble {
 			}
 		});
 	}
+
 }
