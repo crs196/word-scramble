@@ -97,6 +97,8 @@ public class WordScramble {
 		gameFrame.setLayout(new FlowLayout());
 
 		letterPanel = new JPanel();
+		playerPanel = new JPanel();
+
 		letterPanel.setSize(300, 300);
 		LetterGenerator word = new LetterGenerator(difficulty);
 		letters = new ArrayList<JLabel>();
@@ -115,6 +117,8 @@ public class WordScramble {
 			letterPanel.add(letters.get(i), lettersC);
 		}
 
+		playerPanel.add(new JLabel("Lives remaining: " + lives + ""));
+
 		for (JLabel let : letters) {
 			let.addMouseListener(new MouseListener() {
 
@@ -125,16 +129,21 @@ public class WordScramble {
 					if (!l.equals(word.getLetter(currentLetter))) {
 						lives--;
 						let.setVisible(true);
+						playerPanel.remove(0);
+						playerPanel.add(new JLabel("Lives remaining: " + lives + ""), 0);
 					} else {
 						currentLetter++;
+						playerPanel.add(new JLabel(let.getText()));
 					}
 
 					if (lives <= 0) {
 						letterPanel.removeAll();
+						playerPanel.removeAll();
 						letterPanel.add(new JLabel("Sorry, you've run out of lives. Try again next time."));
 					}
 
 					if (currentLetter >= word.getWord().length()) {
+						playerPanel.removeAll();
 						letterPanel.add(new JLabel("Congratulations, you've won!"));
 					}
 
@@ -160,16 +169,16 @@ public class WordScramble {
 			});
 		}
 
-		playerPanel = new JPanel();
-		Player player = new Player();
-		JLabel playerIcon = new JLabel(player.getIcon());
-
-		playerPanel.setLayout(new GridBagLayout());
-		GridBagConstraints playerC = new GridBagConstraints();
-		playerC.gridheight = lettersC.gridheight;
-		playerC.gridwidth = lettersC.gridwidth;
-
-		playerPanel.add(playerIcon, playerC);
+		/*
+		 * Player player = new Player(); JLabel playerIcon = new
+		 * JLabel(player.getIcon());
+		 * 
+		 * playerPanel.setLayout(new GridBagLayout()); GridBagConstraints playerC = new
+		 * GridBagConstraints(); playerC.gridheight = lettersC.gridheight;
+		 * playerC.gridwidth = lettersC.gridwidth;
+		 * 
+		 * playerPanel.add(playerIcon, playerC);
+		 */
 
 		// WHAT NEEDS TO BE DONE HERE IS ADDING A KEYLISTENER THAT WILL MOVE THE PLAYER
 		// ICON WHEN THE KEYS ARE PRESSED (BY CHANGING playerC.gridx AND playerC.gridy)
@@ -187,7 +196,7 @@ public class WordScramble {
 		 */
 
 		gameFrame.add(letterPanel);
-		// gameFrame.add(playerPanel);
+		gameFrame.add(playerPanel);
 		gameFrame.pack();
 		gameFrame.setLocationRelativeTo(null);
 		gameFrame.setResizable(false);
