@@ -7,8 +7,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -16,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 public class WordScramble {
@@ -23,14 +25,18 @@ public class WordScramble {
 	private static JFrame menuFrame, gameFrame;
 	private static JLabel logoLabel, difficultyLabel;
 	private static JPanel buttonPanel, logoPanel;
-	private static JPanel letterPanel;
+	private static JPanel letterPanel, playerPanel;
+	private static JLayeredPane gamePane;
 	private static JButton startButton, exitButton;
 	private static JComboBox<String> difficultySelector;
 	private static String[] difficulties;
 	private static String difficulty;
 	private List<JLabel> letters;
+	private int currentLetter, lives;
 
 	public WordScramble() {
+		currentLetter = 0;
+		lives = 3;
 		initializeMenu();
 		listen();
 	}
@@ -86,30 +92,102 @@ public class WordScramble {
 	 */
 	private void initializeGame() {
 		gameFrame = new JFrame("Word Scramble");
-		gameFrame.setSize(310,310);
+		gameFrame.setSize(310, 310);
 		gameFrame.getContentPane().setBackground(Color.CYAN);
 		gameFrame.setLayout(new FlowLayout());
 
 		letterPanel = new JPanel();
-		letterPanel.setSize(300,300);
-		LetterGenerator letter = new LetterGenerator(difficulty);
-		JLabel[] letters = new JLabel[letter.getWord().length()];
+		letterPanel.setSize(300, 300);
+		LetterGenerator word = new LetterGenerator(difficulty);
+		letters = new ArrayList<JLabel>();
 
 		// add letters to letterPanel
 		letterPanel.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		
+		GridBagConstraints lettersC = new GridBagConstraints();
+
 		// for each letter in the goal word
-		for (int i = 0; i < letter.getWord().length(); i++) {
-			letters[i] = new JLabel(letter.getLetter(i)); // make a JLabel with that letter in it
-			letters[i].setPreferredSize(new Dimension(75, 75)); // set its preferred size larger
-			letters[i].setFont(new Font("Helvetica", 1, 30)); // set the font, make it bold, and set font size
-			c.gridx = (int) (Math.random() * 35); // place it in a random spot in the GridBagLayout
-			c.gridy = (int) (Math.random() * 52);
-			letterPanel.add(letters[i], c);
+		for (int i = 0; i < word.getWord().length(); i++) {
+			letters.add(i, new JLabel(word.getLetter(i))); // make a JLabel with that letter in it
+			letters.get(i).setPreferredSize(new Dimension(75, 75)); // set its preferred size larger
+			letters.get(i).setFont(new Font("Helvetica", 1, 30)); // set the font, make it bold, and set font size
+			lettersC.gridx = (int) (Math.random() * 35); // place it in a random spot in the GridBagLayout
+			lettersC.gridy = (int) (Math.random() * 52);
+			letterPanel.add(letters.get(i), lettersC);
 		}
 
+		for (JLabel let : letters) {
+			let.addMouseListener(new MouseListener() {
+
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					let.setVisible(false);
+					String l = let.getText();
+					if (!l.equals(word.getLetter(currentLetter))) {
+						lives--;
+						let.setVisible(true);
+					} else {
+						currentLetter++;
+					}
+
+					if (lives <= 0) {
+						letterPanel.removeAll();
+						letterPanel.add(new JLabel("Sorry, you've run out of lives. Try again next time."));
+					}
+
+					if (currentLetter >= word.getWord().length()) {
+						letterPanel.add(new JLabel("Congratulations, you've won!"));
+					}
+
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent arg0) {
+				}
+
+				@Override
+				public void mouseExited(MouseEvent arg0) {
+				}
+
+				@Override
+				public void mousePressed(MouseEvent arg0) {
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent arg0) {
+
+				}
+
+			});
+		}
+
+		playerPanel = new JPanel();
+		Player player = new Player();
+		JLabel playerIcon = new JLabel(player.getIcon());
+
+		playerPanel.setLayout(new GridBagLayout());
+		GridBagConstraints playerC = new GridBagConstraints();
+		playerC.gridheight = lettersC.gridheight;
+		playerC.gridwidth = lettersC.gridwidth;
+
+		playerPanel.add(playerIcon, playerC);
+
+		// WHAT NEEDS TO BE DONE HERE IS ADDING A KEYLISTENER THAT WILL MOVE THE PLAYER
+		// ICON WHEN THE KEYS ARE PRESSED (BY CHANGING playerC.gridx AND playerC.gridy)
+		// IN THAT KEYLISTENER, AFTER UPDATING THE PLAYER'S POSITION, CHECK TO SEE IF IT
+		// OVERLAPS A LETTER. IF SO, CHECK IF IT'S THE RIGHT LETTER.
+		// YES? KEEP GOING. NO? GAME OVER
+
+		// letter overlap check
+		/*
+		 * for (JLabel let : letters) { if
+		 * (playerIcon.getLocation().equals(let.getLocation())) { let.setVisible(false);
+		 * if (let.getText().equals(word.getLetter(currentLetter))) { // THE CORRECT
+		 * LETTER HAS BEEN CHOSEN. DO NOTHING } else { // THE INCORRECT LETTER HAS BEEN
+		 * CHOSEN. END THE GAME } } }
+		 */
+
 		gameFrame.add(letterPanel);
+		// gameFrame.add(playerPanel);
 		gameFrame.pack();
 		gameFrame.setLocationRelativeTo(null);
 		gameFrame.setResizable(false);
