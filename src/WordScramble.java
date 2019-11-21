@@ -39,7 +39,7 @@ public class WordScramble {
 	public WordScramble() {
 		currentLetter = 0;
 		lives = 3;
-		usedTime = (endTime - startTime)/1000;
+		usedTime = (endTime - startTime) / 1000;
 		initializeMenu();
 		listen();
 	}
@@ -96,7 +96,7 @@ public class WordScramble {
 	private void initializeGame() {
 		gameFrame = new JFrame("Word Scramble");
 		gameFrame.setSize(310, 310);
-		gameFrame.getContentPane().setBackground(Color.CYAN);
+		// gameFrame.getContentPane().setBackground(Color.CYAN);
 		gameFrame.setLayout(new FlowLayout());
 
 		letterPanel = new JPanel();
@@ -134,40 +134,48 @@ public class WordScramble {
 						let.setVisible(true);
 						playerPanel.remove(0);
 						endTime = System.currentTimeMillis();
-						usedTime = (endTime - startTime)/1000;
-						playerPanel.add(new JLabel("Time used: " + usedTime + " seconds. " + "Lives remaining: " + lives + ""), 0);
-					} 
-					else if (l.equals(word.getLetter(currentLetter))){
+						usedTime = (endTime - startTime) / 1000;
+						playerPanel.add(
+								new JLabel("Time used: " + usedTime + " seconds. " + "Lives remaining: " + lives + ""),
+								0);
+					} else {
 						playerPanel.remove(0);
 						currentLetter++;
 						endTime = System.currentTimeMillis();
-						usedTime = (endTime - startTime)/1000;
-						playerPanel.add(new JLabel("Time used: " + usedTime + " seconds. " + "Lives remaining: " + lives + ""), 0);
+						usedTime = (endTime - startTime) / 1000;
+						playerPanel.add(
+								new JLabel("Time used: " + usedTime + " seconds. " + "Lives remaining: " + lives + ""),
+								0);
 						playerPanel.add(new JLabel(let.getText()));
 					}
 
 					if (lives <= 0) {
 						letterPanel.removeAll();
-						playerPanel.removeAll();
+						gameFrame.remove(playerPanel);
+						gameFrame.repaint();
 						endTime = System.currentTimeMillis();
-						usedTime = (endTime - startTime)/1000;
-						letterPanel.add(new JLabel("Time used: " + usedTime + " seconds. " + "Congratulations, you've won! The word is: " + word.getWord() + " "));					}
-
-					if (currentLetter >= word.getWord().length()) {
-						playerPanel.removeAll();
+						usedTime = (endTime - startTime) / 1000;
+						letterPanel.add(new JLabel("Time used: " + usedTime + " seconds. "
+								+ "Sorry, you've run out of lives. The word was: " + word.getWord() + " "));
+					} else if (currentLetter >= word.getWord().length()) {
+						gameFrame.remove(playerPanel);
+						gameFrame.repaint();
 						endTime = System.currentTimeMillis();
-						usedTime = (endTime - startTime)/1000;
-						letterPanel.add(new JLabel("Time used: " + usedTime + " seconds. " + "Congratulations, you've won! The word is: " + word.getWord() + " "));
+						usedTime = (endTime - startTime) / 1000;
+						letterPanel.add(new JLabel("Time used: " + usedTime + " seconds. "
+								+ "Congratulations, you've won! The word is: " + word.getWord() + " "));
 					}
 
 				}
 
 				@Override
 				public void mouseEntered(MouseEvent arg0) {
+					let.setFont(new Font("Helvetica", 1, 20));
 				}
 
 				@Override
 				public void mouseExited(MouseEvent arg0) {
+					let.setFont(new Font("Helvetica", 1, 30));
 				}
 
 				@Override
@@ -201,8 +209,8 @@ public class WordScramble {
 
 		// letter overlap check
 		/*
-		 * for (JLabel let : letters) { 
-		 * if (playerIcon.getLocation().equals(let.getLocation())) { let.setVisible(false);
+		 * for (JLabel let : letters) { if
+		 * (playerIcon.getLocation().equals(let.getLocation())) { let.setVisible(false);
 		 * if (let.getText().equals(word.getLetter(currentLetter))) { // THE CORRECT
 		 * LETTER HAS BEEN CHOSEN. DO NOTHING } else { // THE INCORRECT LETTER HAS BEEN
 		 * CHOSEN. END THE GAME } } }
