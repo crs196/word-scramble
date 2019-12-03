@@ -18,7 +18,7 @@ public class Player {
 	/*
 	 * listeners for player events
 	 */
-	public void keyPressed(KeyEvent e) {
+	private void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			y += 5;
 		} else if (e.getKeyCode() == KeyEvent.VK_UP) {

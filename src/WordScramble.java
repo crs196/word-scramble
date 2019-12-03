@@ -26,7 +26,6 @@ public class WordScramble {
 	private static JLabel logoLabel, difficultyLabel;
 	private static JPanel buttonPanel, logoPanel;
 	private static JPanel letterPanel, playerPanel;
-	private static JLayeredPane gamePane;
 	private static JButton startButton, exitButton;
 	private static JComboBox<String> difficultySelector;
 	private static String[] difficulties;
@@ -34,7 +33,6 @@ public class WordScramble {
 	private List<JLabel> letters;
 	private int currentLetter, lives;
 	private long startTime, endTime, usedTime;
-	private int x, y;
 
 	public WordScramble() {
 		currentLetter = 0;
@@ -50,9 +48,8 @@ public class WordScramble {
 	private void initializeMenu() {
 		// set up actual frame
 		menuFrame = new JFrame("Word Scramble");
-		menuFrame.setSize(350, 275);
+		menuFrame.setSize(500, 400);
 		menuFrame.setLocationRelativeTo(null);
-		menuFrame.setBackground(Color.BLUE);
 		menuFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		menuFrame.setLayout(new BorderLayout(10, 10));
 
@@ -79,7 +76,7 @@ public class WordScramble {
 		buttonPanel.add(exitButton);
 
 		// set up logo panel
-		ImageIcon mIcon = new ImageIcon("UI/title.png");
+		ImageIcon mIcon = new ImageIcon("UI/title.gif");
 		logoLabel = new JLabel(mIcon);
 		logoPanel.add(logoLabel);
 
@@ -209,12 +206,18 @@ public class WordScramble {
 
 		// letter overlap check
 		/*
-		 * for (JLabel let : letters) { if
-		 * (playerIcon.getLocation().equals(let.getLocation())) { let.setVisible(false);
-		 * if (let.getText().equals(word.getLetter(currentLetter))) { // THE CORRECT
-		 * LETTER HAS BEEN CHOSEN. DO NOTHING } else { // THE INCORRECT LETTER HAS BEEN
-		 * CHOSEN. END THE GAME } } }
+		 * for (JLabel let : letters) { 
+		 * if (playerIcon.getLocation().equals(let.getLocation())) { 
+		 * 	let.setVisible(false);
+		 * if (let.getText().equals(word.getLetter(currentLetter))) { 
+		 * 	// THE CORRECT LETTER HAS BEEN CHOSEN. DO NOTHING 
+		 * } else { 
+		 * // THE INCORRECT LETTER HAS BEEN CHOSEN. END THE GAME 
+		 * } 
+		 * } 
+		 * }
 		 */
+		
 
 		gameFrame.add(letterPanel);
 		gameFrame.add(playerPanel);
