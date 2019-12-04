@@ -1,7 +1,10 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -11,6 +14,11 @@ public class MazeDraw extends JPanel{
 	BufferedImage maze;
 	String difficulty;
 	int[][] possibleLetterLocs;
+	List<Letter> letters;
+	int playerX, playerY;
+	KeyListener listener;
+	boolean choseWord;
+	int moveSpeed;
 	
 	public MazeDraw(String diff) {
 		difficulty = diff;
@@ -18,6 +26,15 @@ public class MazeDraw extends JPanel{
 						{17,9,0}, {2,11,0}, {20,11,0}, {5,13,0}, {17,13,0}, {17,15,0}, {7,17,0}, {9,17,0}, {13,17,0}, 
 						{19,18,0}, {4,19,0}, {2,20,0}, {11,20,0}, {20,20,0}};
 		possibleLetterLocs = pLL;
+		
+		letters = new ArrayList<Letter>();
+		
+		playerX = 308;
+		playerY = 308;
+		
+		choseWord = false;
+		moveSpeed = 3;
+		
 	}
 	
 	protected void paintComponent(Graphics graph) {
@@ -90,6 +107,10 @@ public class MazeDraw extends JPanel{
 		//place letters on the image
 		placeLetters(g);
 		
+		//draw the player at the spawn
+		g.setColor(Color.GREEN);
+		g.fillRect(playerX, playerY, 15, 15);
+		
 		//put the BufferedImage on the MazeDraw object
 		graph.drawImage(maze, 0, 0, this);
 		
@@ -104,17 +125,99 @@ public class MazeDraw extends JPanel{
 		g.setColor(Color.BLUE);
 		g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
 		
-		//for each letter in the word, choose a random letter spawn point to place it at
-		for (int i = 0; i < length; i++) {
-			do {
-				r = (int) (Math.random() * possibleLetterLocs.length);
-			} while (possibleLetterLocs[r][2] != 0);
-			
-			x = (possibleLetterLocs[r][0] * 30) - 22;
-			y = (possibleLetterLocs[r][1] * 30) - 8;
-			g.drawString(word.getLetter(i), x, y);
-			
-			possibleLetterLocs[r][2]++; //mark that that spawn point has been used
+		if(!choseWord) {
+			//for each letter in the word, choose a random letter spawn point to place it at
+			for (int i = 0; i < length; i++) {
+				do {
+					r = (int) (Math.random() * possibleLetterLocs.length);
+				} while (possibleLetterLocs[r][2] != 0);
+				
+				x = (possibleLetterLocs[r][0] * 30) - 22;
+				y = (possibleLetterLocs[r][1] * 30) - 8;
+				g.drawString(word.getLetter(i), x, y);
+				
+				//add this letter to the list keeping track of them
+				letters.add(new Letter(word.getLetter(i), x, y));
+				
+				possibleLetterLocs[r][2]++; //mark that that spawn point has been used
+			}
+		} else {
+			for (Letter l : letters)
+				g.drawString(l.getLetter(), l.getX(), l.getY());
 		}
+		
+		
+		choseWord = true;
+	}
+	
+	public void moveUp() {
+		if (!checkCollide(0)) {
+			playerY -= moveSpeed;
+		}
+	}
+	
+	public void moveDown() {
+		if (!checkCollide(2)) {
+			playerY += moveSpeed;
+		}
+	}
+	
+	public void moveRight() {
+		if (!checkCollide(1)) {
+			playerX += moveSpeed;
+		}
+	}
+	
+	public void moveLeft() {
+		if (!checkCollide(3)) {
+			playerX -= moveSpeed;
+		}
+	}
+	
+	//checks to see if moving in the given direction would collide with a wall
+	//0 means up, 1 means right, 2 means down, 3 means left
+	public boolean checkCollide(int direction) {
+		
+		boolean collide = false;
+		
+		if (direction == 0) {
+			for (int i = playerX; i < playerX + 15; i++) {
+				if(maze.getRGB(i, playerY - moveSpeed) == -16777216) {
+					collide = true;
+					break;
+				}
+			}
+		} else if (direction == 1) {
+			for (int i = playerY; i < playerY + 15; i++) {
+				if(maze.getRGB(playerX + 15 + moveSpeed, i) == -16777216) {
+					collide = true;
+					break;
+				}
+			}
+		} else if (direction == 2) {
+			for (int i = playerX; i < playerX + 15; i++) {
+				if(maze.getRGB(i, playerY + 15 + moveSpeed) == -16777216) {
+					collide = true;
+					break;
+				}
+			}
+		} else if (direction == 3) {
+			for (int i = playerY; i < playerY + 15; i++) {
+				if(maze.getRGB(playerX - moveSpeed, i) == -16777216) {
+					collide = true;
+					break;
+				}
+			}
+		}
+		
+		return collide;
+	}
+	
+	public int getPlayerX() {
+		return playerX;
+	}
+	
+	public int getPlayerY() {
+		return playerY;
 	}
 }

@@ -7,6 +7,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -33,11 +35,11 @@ public class WordScramble {
 	private List<JLabel> letters;
 	private int currentLetter, lives;
 	private long startTime, endTime, usedTime;
+	private KeyListener listener;
 
 	public WordScramble() {
 		currentLetter = 0;
 		lives = 3;
-		usedTime = (endTime - startTime) / 1000;
 		initializeMenu();
 		listen();
 	}
@@ -92,42 +94,61 @@ public class WordScramble {
 	 */
 	private void initializeGame() {
 		gameFrame = new JFrame("Word Scramble");
-		gameFrame.setSize(646, 669);
-
+		
+		startTime = System.currentTimeMillis();
+		usedTime = (System.currentTimeMillis() - startTime) / 1000;
+		
 		playerPanel = new JPanel();
 		
 		MazeDraw maze = new MazeDraw(difficulty);
 
-		//playerPanel.add(new JLabel("Time used: " + usedTime + " seconds. " + "Lives remaining: " + lives + ""));
-
-
-		// WHAT NEEDS TO BE DONE HERE IS ADDING A KEYLISTENER THAT WILL MOVE THE PLAYER
-		// ICON WHEN THE KEYS ARE PRESSED (BY CHANGING playerC.gridx AND playerC.gridy)
-		// IN THAT KEYLISTENER, AFTER UPDATING THE PLAYER'S POSITION, CHECK TO SEE IF IT
-		// OVERLAPS A LETTER. IF SO, CHECK IF IT'S THE RIGHT LETTER.
-		// YES? KEEP GOING. NO? GAME OVER
-
-		// letter overlap check
-		/*
-		 * for (JLabel let : letters) { 
-		 * if (playerIcon.getLocation().equals(let.getLocation())) { 
-		 * 	let.setVisible(false);
-		 * if (let.getText().equals(word.getLetter(currentLetter))) { 
-		 * 	// THE CORRECT LETTER HAS BEEN CHOSEN. DO NOTHING 
-		 * } else { 
-		 * // THE INCORRECT LETTER HAS BEEN CHOSEN. END THE GAME 
-		 * } 
-		 * } 
-		 * }
-		 */
+		playerPanel.setBackground(Color.BLACK);
+		JLabel UIText = new JLabel("Time used: " + usedTime + " seconds. " + "Lives remaining: " + lives + "");
+		UIText.setForeground(Color.WHITE);
+		playerPanel.add(UIText);
+		
+		gameFrame.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode()== KeyEvent.VK_RIGHT) {
+		            maze.moveRight();
+		            maze.repaint();
+				} else if(e.getKeyCode()== KeyEvent.VK_LEFT) {
+					maze.moveLeft();
+		            maze.repaint();
+				} else if(e.getKeyCode()== KeyEvent.VK_DOWN) {
+		            maze.moveDown();
+		            maze.repaint();
+				} else if(e.getKeyCode()== KeyEvent.VK_UP) {
+		            maze.moveUp();;
+		            maze.repaint();
+				}
+				
+			}
+		});
 		
 
-		gameFrame.add(maze);
-		//gameFrame.add(playerPanel);
+		gameFrame.add(maze, BorderLayout.CENTER);
+		gameFrame.add(playerPanel, BorderLayout.SOUTH);
+		gameFrame.setSize(646, 669 + playerPanel.getHeight());
 		gameFrame.setLocationRelativeTo(null);
 		gameFrame.setResizable(false);
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		gameFrame.setVisible(true);
+		
 	}
 
 	/*
