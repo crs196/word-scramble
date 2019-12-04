@@ -1,25 +1,15 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 public class WordScramble {
@@ -27,15 +17,13 @@ public class WordScramble {
 	private static JFrame menuFrame, gameFrame;
 	private static JLabel logoLabel, difficultyLabel;
 	private static JPanel buttonPanel, logoPanel;
-	private static JPanel letterPanel, playerPanel;
+	private static JPanel playerPanel;
 	private static JButton startButton, exitButton;
 	private static JComboBox<String> difficultySelector;
 	private static String[] difficulties;
 	private static String difficulty;
-	private List<JLabel> letters;
 	private int currentLetter, lives;
-	private long startTime, endTime, usedTime;
-	private KeyListener listener;
+	private long startTime, usedTime;
 
 	public WordScramble() {
 		currentLetter = 0;
