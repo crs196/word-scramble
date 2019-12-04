@@ -23,6 +23,7 @@ public class MazeDraw extends JPanel{
 	protected void paintComponent(Graphics graph) {
 		super.paintComponent(graph);
 		
+		//create BufferedImage to draw on
 		maze = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
 		
 		Graphics g = maze.createGraphics();
@@ -86,14 +87,16 @@ public class MazeDraw extends JPanel{
 		g.fillRect(480, 480, 60, 60);
 		g.fillRect(480, 540, 30, 30);
 		
+		//place letters on the image
 		placeLetters(g);
 		
+		//put the BufferedImage on the MazeDraw object
 		graph.drawImage(maze, 0, 0, this);
 		
 	}
 	
 	private void placeLetters(Graphics g) {
-		LetterGenerator word = new LetterGenerator(difficulty);
+		LetterGenerator word = new LetterGenerator(difficulty); //create a new word
 		
 		int length = word.getWord().length();
 		int r, x, y;
@@ -101,6 +104,7 @@ public class MazeDraw extends JPanel{
 		g.setColor(Color.BLUE);
 		g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 25));
 		
+		//for each letter in the word, choose a random letter spawn point to place it at
 		for (int i = 0; i < length; i++) {
 			do {
 				r = (int) (Math.random() * possibleLetterLocs.length);
@@ -110,7 +114,7 @@ public class MazeDraw extends JPanel{
 			y = (possibleLetterLocs[r][1] * 30) - 8;
 			g.drawString(word.getLetter(i), x, y);
 			
-			possibleLetterLocs[r][2]++;
+			possibleLetterLocs[r][2]++; //mark that that spawn point has been used
 		}
 	}
 }

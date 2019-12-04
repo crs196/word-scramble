@@ -92,111 +92,14 @@ public class WordScramble {
 	 */
 	private void initializeGame() {
 		gameFrame = new JFrame("Word Scramble");
-		gameFrame.setSize(310, 310);
-		// gameFrame.getContentPane().setBackground(Color.CYAN);
-		gameFrame.setLayout(new FlowLayout());
+		gameFrame.setSize(646, 669);
 
-		letterPanel = new JPanel();
 		playerPanel = new JPanel();
+		
+		MazeDraw maze = new MazeDraw(difficulty);
 
-		letterPanel.setSize(300, 300);
-		LetterGenerator word = new LetterGenerator(difficulty);
-		letters = new ArrayList<JLabel>();
+		//playerPanel.add(new JLabel("Time used: " + usedTime + " seconds. " + "Lives remaining: " + lives + ""));
 
-		// add letters to letterPanel
-		letterPanel.setLayout(new GridBagLayout());
-		GridBagConstraints lettersC = new GridBagConstraints();
-
-		// for each letter in the goal word
-		for (int i = 0; i < word.getWord().length(); i++) {
-			letters.add(i, new JLabel(word.getLetter(i))); // make a JLabel with that letter in it
-			letters.get(i).setPreferredSize(new Dimension(75, 75)); // set its preferred size larger
-			letters.get(i).setFont(new Font("Helvetica", 1, 30)); // set the font, make it bold, and set font size
-			lettersC.gridx = (int) (Math.random() * 35); // place it in a random spot in the GridBagLayout
-			lettersC.gridy = (int) (Math.random() * 52);
-			letterPanel.add(letters.get(i), lettersC);
-		}
-
-		playerPanel.add(new JLabel("Time used: " + usedTime + " seconds. " + "Lives remaining: " + lives + ""));
-
-		for (JLabel let : letters) {
-			let.addMouseListener(new MouseListener() {
-
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					let.setVisible(false);
-					String l = let.getText();
-					if (!l.equals(word.getLetter(currentLetter))) {
-						lives--;
-						let.setVisible(true);
-						playerPanel.remove(0);
-						endTime = System.currentTimeMillis();
-						usedTime = (endTime - startTime) / 1000;
-						playerPanel.add(
-								new JLabel("Time used: " + usedTime + " seconds. " + "Lives remaining: " + lives + ""),
-								0);
-					} else {
-						playerPanel.remove(0);
-						currentLetter++;
-						endTime = System.currentTimeMillis();
-						usedTime = (endTime - startTime) / 1000;
-						playerPanel.add(
-								new JLabel("Time used: " + usedTime + " seconds. " + "Lives remaining: " + lives + ""),
-								0);
-						playerPanel.add(new JLabel(let.getText()));
-					}
-
-					if (lives <= 0) {
-						letterPanel.removeAll();
-						gameFrame.remove(playerPanel);
-						gameFrame.repaint();
-						endTime = System.currentTimeMillis();
-						usedTime = (endTime - startTime) / 1000;
-						letterPanel.add(new JLabel("Time used: " + usedTime + " seconds. "
-								+ "Sorry, you've run out of lives. The word was: " + word.getWord() + " "));
-					} else if (currentLetter >= word.getWord().length()) {
-						gameFrame.remove(playerPanel);
-						gameFrame.repaint();
-						endTime = System.currentTimeMillis();
-						usedTime = (endTime - startTime) / 1000;
-						letterPanel.add(new JLabel("Time used: " + usedTime + " seconds. "
-								+ "Congratulations, you've won! The word is: " + word.getWord() + " "));
-					}
-
-				}
-
-				@Override
-				public void mouseEntered(MouseEvent arg0) {
-					let.setFont(new Font("Helvetica", 1, 20));
-				}
-
-				@Override
-				public void mouseExited(MouseEvent arg0) {
-					let.setFont(new Font("Helvetica", 1, 30));
-				}
-
-				@Override
-				public void mousePressed(MouseEvent arg0) {
-				}
-
-				@Override
-				public void mouseReleased(MouseEvent arg0) {
-
-				}
-
-			});
-		}
-
-		/*
-		 * Player player = new Player(); JLabel playerIcon = new
-		 * JLabel(player.getIcon());
-		 * 
-		 * playerPanel.setLayout(new GridBagLayout()); GridBagConstraints playerC = new
-		 * GridBagConstraints(); playerC.gridheight = lettersC.gridheight;
-		 * playerC.gridwidth = lettersC.gridwidth;
-		 * 
-		 * playerPanel.add(playerIcon, playerC);
-		 */
 
 		// WHAT NEEDS TO BE DONE HERE IS ADDING A KEYLISTENER THAT WILL MOVE THE PLAYER
 		// ICON WHEN THE KEYS ARE PRESSED (BY CHANGING playerC.gridx AND playerC.gridy)
@@ -219,9 +122,8 @@ public class WordScramble {
 		 */
 		
 
-		gameFrame.add(letterPanel);
-		gameFrame.add(playerPanel);
-		gameFrame.pack();
+		gameFrame.add(maze);
+		//gameFrame.add(playerPanel);
 		gameFrame.setLocationRelativeTo(null);
 		gameFrame.setResizable(false);
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
