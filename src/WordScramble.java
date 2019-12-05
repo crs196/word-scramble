@@ -21,12 +21,13 @@ public class WordScramble {
 	private static JButton startButton, exitButton;
 	private static JComboBox<String> difficultySelector;
 	private static String[] difficulties;
-	private static String difficulty;
+	private static String difficulty, collectedLetter;
 	private int currentLetter, lives;
 	private long startTime, usedTime;
 
 	public WordScramble() {
 		currentLetter = 0;
+		collectedLetter = "";
 		lives = 3;
 		initializeMenu();
 		listen();
@@ -112,16 +113,16 @@ public class WordScramble {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode()== KeyEvent.VK_RIGHT) {
-		            maze.moveRight();
+		            collectedLetter = maze.moveRight();
 		            maze.repaint();
 				} else if(e.getKeyCode()== KeyEvent.VK_LEFT) {
-					maze.moveLeft();
+					collectedLetter = maze.moveLeft();
 		            maze.repaint();
 				} else if(e.getKeyCode()== KeyEvent.VK_DOWN) {
-		            maze.moveDown();
+					collectedLetter = maze.moveDown();
 		            maze.repaint();
 				} else if(e.getKeyCode()== KeyEvent.VK_UP) {
-		            maze.moveUp();;
+					collectedLetter = maze.moveUp();;
 		            maze.repaint();
 				}
 				

@@ -10,14 +10,14 @@ import javax.swing.JPanel;
 
 public class MazeDraw extends JPanel{
 	
-	BufferedImage maze;
-	String difficulty;
-	int[][] possibleLetterLocs;
-	List<Letter> letters;
-	int playerX, playerY;
-	KeyListener listener;
-	boolean choseWord;
-	int moveSpeed;
+	private BufferedImage maze;
+	private String difficulty;
+	private int[][] possibleLetterLocs;
+	private List<Letter> letters;
+	private int playerX, playerY, moveSpeed, currentLetter;
+	private KeyListener listener;
+	private boolean choseWord;
+	private LetterGenerator word;
 	
 	public MazeDraw(String diff) {
 		difficulty = diff;
@@ -32,7 +32,8 @@ public class MazeDraw extends JPanel{
 		playerY = 308;
 		
 		choseWord = false;
-		moveSpeed = 3;
+		moveSpeed = 5;
+		currentLetter = 0;
 		
 	}
 	
@@ -116,7 +117,8 @@ public class MazeDraw extends JPanel{
 	}
 	
 	private void placeLetters(Graphics g) {
-		LetterGenerator word = new LetterGenerator(difficulty); //create a new word
+		if (!choseWord)
+			word = new LetterGenerator(difficulty); //create a new word
 		
 		int length = word.getWord().length();
 		int r, x, y;
@@ -140,42 +142,46 @@ public class MazeDraw extends JPanel{
 				
 				possibleLetterLocs[r][2]++; //mark that that spawn point has been used
 			}
-		} else {
+		} else
 			for (Letter l : letters)
-				g.drawString(l.getLetter(), l.getX(), l.getY());
-		}
+				if (l.getDraw())
+					g.drawString(l.getLetter(), l.getX(), l.getY());
 		
 		
 		choseWord = true;
 	}
 	
-	public void moveUp() {
+	public String moveUp() {
 		if (!checkCollide(0)) {
 			playerY -= moveSpeed;
 		}
+		return collectLetters();
 	}
 	
-	public void moveDown() {
+	public String moveDown() {
 		if (!checkCollide(2)) {
 			playerY += moveSpeed;
 		}
+		return collectLetters();
 	}
 	
-	public void moveRight() {
+	public String moveRight() {
 		if (!checkCollide(1)) {
 			playerX += moveSpeed;
 		}
+		return collectLetters();
 	}
 	
-	public void moveLeft() {
+	public String moveLeft() {
 		if (!checkCollide(3)) {
 			playerX -= moveSpeed;
 		}
+		return collectLetters();
 	}
 	
 	//checks to see if moving in the given direction would collide with a wall
 	//0 means up, 1 means right, 2 means down, 3 means left
-	public boolean checkCollide(int direction) {
+	private boolean checkCollide(int direction) {
 		
 		boolean collide = false;
 		
@@ -210,6 +216,31 @@ public class MazeDraw extends JPanel{
 		}
 		
 		return collide;
+	}
+	
+	//checks to see if the player is overlapping a letter and should collect it
+	private String collectLetters() {
+		String collectedLetter = "";
+		
+		outer:
+		for (int i = 0; i < letters.size(); i++) {
+			if (letters.get(i).getDraw()) {
+				if ((playerX >= letters.get(i).getX() - (8 + 15)) && (playerX <= letters.get(i).getX() + 30 - 8) &&	//if player is in x-range
+						(playerY >= letters.get(i).getY() - (22 + 15)) && (playerY <= letters.get(i).getY() + 30 - 22)) {	//and y-range of the letter
+						
+						if(letters.get(i).getLetter().equalsIgnoreCase(word.getLetter(currentLetter))) {
+							collectedLetter = letters.get(i).getLetter();
+							currentLetter++;
+							letters.get(i).setDraw(false);
+							break outer;
+						} else {
+							collectedLetter = "wrong";
+						}
+					}
+			}
+		}
+		
+		return collectedLetter;
 	}
 	
 	public int getPlayerX() {
