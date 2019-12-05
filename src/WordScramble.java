@@ -17,7 +17,7 @@ public class WordScramble {
 	private static JFrame menuFrame, gameFrame;
 	private static JLabel logoLabel, difficultyLabel;
 	private static JPanel buttonPanel, logoPanel;
-	private static JPanel playerPanel;
+	private static JPanel UIPanel;
 	private static JButton startButton, exitButton;
 	private static JComboBox<String> difficultySelector;
 	private static String[] difficulties;
@@ -84,18 +84,22 @@ public class WordScramble {
 	private void initializeGame() {
 		gameFrame = new JFrame("Word Scramble");
 		
+		//set up timer
 		startTime = System.currentTimeMillis();
 		usedTime = (System.currentTimeMillis() - startTime) / 1000;
 		
-		playerPanel = new JPanel();
+		UIPanel = new JPanel();
 		
+		//create maze
 		MazeDraw maze = new MazeDraw(difficulty);
 
-		playerPanel.setBackground(Color.BLACK);
+		//add UI to UIPanel
+		UIPanel.setBackground(Color.BLACK);
 		JLabel UIText = new JLabel("Time used: " + usedTime + " seconds. " + "Lives remaining: " + lives + "");
 		UIText.setForeground(Color.WHITE);
-		playerPanel.add(UIText);
+		UIPanel.add(UIText);
 		
+		//add a keyListener to the game JFrame
 		gameFrame.addKeyListener(new KeyListener() {
 			
 			@Override
@@ -110,6 +114,7 @@ public class WordScramble {
 				
 			}
 			
+			//move the player in the direction pressed
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode()== KeyEvent.VK_RIGHT) {
@@ -130,9 +135,10 @@ public class WordScramble {
 		});
 		
 
+		//add panels to and set up gameFrame
 		gameFrame.add(maze, BorderLayout.CENTER);
-		gameFrame.add(playerPanel, BorderLayout.SOUTH);
-		gameFrame.setSize(646, 669 + playerPanel.getHeight());
+		gameFrame.add(UIPanel, BorderLayout.SOUTH);
+		gameFrame.setSize(646, 669 + UIPanel.getHeight());
 		gameFrame.setLocationRelativeTo(null);
 		gameFrame.setResizable(false);
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

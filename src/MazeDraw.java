@@ -15,7 +15,6 @@ public class MazeDraw extends JPanel{
 	private int[][] possibleLetterLocs;
 	private List<Letter> letters;
 	private int playerX, playerY, moveSpeed, currentLetter;
-	private KeyListener listener;
 	private boolean choseWord;
 	private LetterGenerator word;
 	
@@ -142,7 +141,7 @@ public class MazeDraw extends JPanel{
 				
 				possibleLetterLocs[r][2]++; //mark that that spawn point has been used
 			}
-		} else
+		} else //just redraw the letters, don't replace them
 			for (Letter l : letters)
 				if (l.getDraw())
 					g.drawString(l.getLetter(), l.getX(), l.getY());
@@ -150,6 +149,10 @@ public class MazeDraw extends JPanel{
 		
 		choseWord = true;
 	}
+	
+	/*
+	 * these methods move the player in the specified direction only if the player won't move into a wall
+	 */
 	
 	public String moveUp() {
 		if (!checkCollide(0)) {
@@ -185,6 +188,8 @@ public class MazeDraw extends JPanel{
 		
 		boolean collide = false;
 		
+		//each of these check the edge of the player that could hit a wall depending on the direction
+		// and if the space they're about to move to is black, don't do it
 		if (direction == 0) {
 			for (int i = playerX; i < playerX + 15; i++) {
 				if(maze.getRGB(i, playerY - moveSpeed) == -16777216) {
@@ -222,21 +227,22 @@ public class MazeDraw extends JPanel{
 	private String collectLetters() {
 		String collectedLetter = "";
 		
-		outer:
+		out:
 		for (int i = 0; i < letters.size(); i++) {
 			if (letters.get(i).getDraw()) {
 				if ((playerX >= letters.get(i).getX() - (8 + 15)) && (playerX <= letters.get(i).getX() + 30 - 8) &&	//if player is in x-range
 						(playerY >= letters.get(i).getY() - (22 + 15)) && (playerY <= letters.get(i).getY() + 30 - 22)) {	//and y-range of the letter
 						
-						if(letters.get(i).getLetter().equalsIgnoreCase(word.getLetter(currentLetter))) {
-							collectedLetter = letters.get(i).getLetter();
-							currentLetter++;
-							letters.get(i).setDraw(false);
-							break outer;
-						} else {
-							collectedLetter = "wrong";
-						}
+					//if the letter collected is the correct next one, collect it
+					if(letters.get(i).getLetter().equalsIgnoreCase(word.getLetter(currentLetter))) {
+						collectedLetter = letters.get(i).getLetter();
+						currentLetter++;
+						letters.get(i).setDraw(false);
+						break out;
+					} else { //otherwise don't
+						collectedLetter = "wrong";
 					}
+				}
 			}
 		}
 		

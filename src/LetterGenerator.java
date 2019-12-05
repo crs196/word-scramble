@@ -13,6 +13,7 @@ public class LetterGenerator {
 
 	public LetterGenerator(String diff) {
 
+		//sets up reader to read from the dictionary of proper difficulty
 		switch (diff) {
 		case "Easy":
 			try {
@@ -37,7 +38,7 @@ public class LetterGenerator {
 			break;
 		}
 
-		// add words to arrayList
+		// add words from chosen dictionary to arrayList
 
 		words = new ArrayList<String>();
 		String temp;
@@ -50,19 +51,15 @@ public class LetterGenerator {
 			e.printStackTrace();
 		}
 
-		chooseWord();
-	}
-
-	private void chooseWord() {
-		int chosen = 0;
-		chosen = (int) (Math.random() * words.size());
-		chosenWord = words.get(chosen);
+		//randomly chooses a word from the dictionary
+		chosenWord = words.get((int) (Math.random() * words.size()));
 	}
 
 	public String getWord() {
 		return chosenWord;
 	}
 
+	//returns the specified letter of the word
 	public String getLetter(int index) {
 		if (index >= chosenWord.length())
 			return "";
