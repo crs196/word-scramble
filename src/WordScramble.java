@@ -1,5 +1,4 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,14 +20,9 @@ public class WordScramble {
 	private static JButton startButton, exitButton;
 	private static JComboBox<String> difficultySelector;
 	private static String[] difficulties;
-	private static String difficulty, collectedLetter;
-	private int currentLetter, lives;
-	private long startTime, usedTime;
+	private static String difficulty;
 
 	public WordScramble() {
-		currentLetter = 0;
-		collectedLetter = "";
-		lives = 3;
 		initializeMenu();
 		listen();
 	}
@@ -84,20 +78,11 @@ public class WordScramble {
 	private void initializeGame() {
 		gameFrame = new JFrame("Word Scramble");
 		
-		//set up timer
-		startTime = System.currentTimeMillis();
-		usedTime = (System.currentTimeMillis() - startTime) / 1000;
-		
 		UIPanel = new JPanel();
 		
 		//create maze
-		MazeDraw maze = new MazeDraw(difficulty);
+		MazeDraw maze = new MazeDraw(difficulty, UIPanel);
 
-		//add UI to UIPanel
-		UIPanel.setBackground(Color.BLACK);
-		JLabel UIText = new JLabel("Time used: " + usedTime + " seconds. " + "Lives remaining: " + lives + "");
-		UIText.setForeground(Color.WHITE);
-		UIPanel.add(UIText);
 		
 		//add a keyListener to the game JFrame
 		gameFrame.addKeyListener(new KeyListener() {
@@ -118,16 +103,16 @@ public class WordScramble {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode()== KeyEvent.VK_RIGHT) {
-		            collectedLetter = maze.moveRight();
+		            maze.moveRight();
 		            maze.repaint();
 				} else if(e.getKeyCode()== KeyEvent.VK_LEFT) {
-					collectedLetter = maze.moveLeft();
+					maze.moveLeft();
 		            maze.repaint();
 				} else if(e.getKeyCode()== KeyEvent.VK_DOWN) {
-					collectedLetter = maze.moveDown();
+					maze.moveDown();
 		            maze.repaint();
 				} else if(e.getKeyCode()== KeyEvent.VK_UP) {
-					collectedLetter = maze.moveUp();;
+					maze.moveUp();;
 		            maze.repaint();
 				}
 				
@@ -138,7 +123,7 @@ public class WordScramble {
 		//add panels to and set up gameFrame
 		gameFrame.add(maze, BorderLayout.CENTER);
 		gameFrame.add(UIPanel, BorderLayout.SOUTH);
-		gameFrame.setSize(646, 669 + UIPanel.getHeight());
+		gameFrame.setSize(635, 675);
 		gameFrame.setLocationRelativeTo(null);
 		gameFrame.setResizable(false);
 		gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -156,7 +141,6 @@ public class WordScramble {
 			public void actionPerformed(ActionEvent actionEvent) {
 				menuFrame.setVisible(false);
 				initializeGame();
-				startTime = System.currentTimeMillis();
 			}
 		});
 
